@@ -1,0 +1,13 @@
+apiVersion: skaffold/v1beta12
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: form3tech/aws-auth-refresher
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - hack/skaffold/deployment.yaml
