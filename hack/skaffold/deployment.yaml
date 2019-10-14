@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aws-auth-refresher
+  name: aws-auth-refresher
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aws-auth-refresher
+  template:
+    metadata:
+      labels:
+        app: aws-auth-refresher
+    spec:
+      containers:
+      - name: aws-auth-refresher
+        image: form3tech/aws-auth-refresher:latest
+#        envFrom:
+#        - secretRef:
+#            name: aws-auth-refresher
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65534
+          runAsNonRoot: true
+          runAsUser: 65534
+      securityContext:
+        fsGroup: 65534
+      serviceAccountName: aws-auth-refresher
