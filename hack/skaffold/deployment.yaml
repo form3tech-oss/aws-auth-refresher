@@ -19,9 +19,6 @@ spec:
       containers:
       - name: aws-auth-refresher
         image: form3tech/aws-auth-refresher:latest
-#        envFrom:
-#        - secretRef:
-#            name: aws-auth-refresher
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
