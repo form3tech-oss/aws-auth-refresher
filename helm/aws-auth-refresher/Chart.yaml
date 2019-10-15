@@ -1,0 +1,11 @@
+apiVersion: v1
+appVersion: 1.0.0
+description: Makes it easier to use AWS EKS with temporary AWS IAM users.
+name: aws-auth-refresher
+version: 1.0.0
+home: https://github.com/form3tech-oss/aws-auth-refresher
+sources:
+- https://github.com/form3tech-oss/aws-auth-refresher
+maintainers:
+- name: bmcstdio
+  email: brunomcustodio@gmail.com
