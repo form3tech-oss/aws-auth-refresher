@@ -5,11 +5,13 @@ services:
 - docker
 cache:
   directories:
-  - $GOPATH/pkg/mod
-  - $HOME/.cache/go-build
+  - "$GOPATH/pkg/mod"
+  - "$HOME/.cache/go-build"
 env:
   global:
   - GO111MODULE=on
+  - secure: F937KXL2qerjaHvWTXE5GjvFzAHYVRFvJ/WCd3FALqHWv0tE2VMwNlM/Ta6c0ubKnr8kzFK++SSBhKRWKj0jvgRql/6LIMR2BWsdKAXDo0vBVZygIrlgJRZAGN5IZa4ges46Vn7uTXRY3l9gaYaT4giaIEH3yuG8ixNJXGj+vknX2Stf9n/2TQCiUDjNrgPaj/z+tJDRbTP5J4OD4mGARzj2bGVPiJQiQzfvnAH0twTAkOZ0EDCrSaaeUOejBg4oI1dJE2eXfp+joY83xIcjAuiib7+W9BgBzGIO99+C7OcaYrHwRGHkIjiBv3+AsiyTD1l8lvwWvS7nS5KvLAv7fb+bLUWJniQjhoy3sn+zjT/+2c/zlevIs7xRKxsMPBgxlkEu6FlzZEPulz3mRlZ/Uj28Fuxot6WkSEsn52M9/Gq3/w2VxOKkOjRZpfyewdqhMd8mm+mzs3u5LrBF33Ai354cd8elV2cQ8UEzDIRZ44I9j1aVxAaxI8Pd68ZyVHatTrS8vzWR6T3nLuE5PVA4mtCTChyr1WeCW+LDlfJKFWT5AvO+nGQt0YyHgCA25y7YI7WNxwpr5ZsQp65fSJdUqqqwba7mh94sgAdENcJwniQGoJNr94Cp4wvfoBDVm2k7rUxNmnxhYU+Mv2tkZU4a+y2Z6MjSqQq+/wxg5F5jads=
+  - secure: hTzHIOG3ZqwnfvjwH7a94YvplpyipIaDMus7Gm/2mc1n9fQzXdL8nPiphZPlpEOH9Nr+WPCrHn2wiND0cI716SP6VHz8moyw1kCca3e7AuceIATy04e+/VPyJ4DvzsZyWfnzzvP6/KtQ2qeyTp6RWKksp18WyysGBpg4xcKHwhdTGLCzICi1HvVKUqbGJauQ6Dv1XKQXrsbkNLyTLGUrZlKPIOHJYFE8lfrQTBpQpHdsRABg20pZal2gizufqYxtWQsLMbgNEBwNk7xYFb5sawd+MrG5sf79v30QFo3X6zQuII0Qoo/oC5/lGgbKw9bnyajCwfgCZOHEw1aQDc/xjb1cpenJg/Cxa+qDwrYPRxesCp6ajWtgt0wv3/V6dJwuUEo0ZATAASwUTn0IXg6jr07lxQdWFDJ/fMgV/Jdl46M1EpMXTODlH2X2S/DAHJFC//Ee40E33JyR5FRyV+vPwqExyNwIfeD9GjAaR3NSUWf9/Eq2Ht6F74Gv4O6uuAIDCXSyKhj5JGBgzMs9fR2M5vMPtFXOD2ooVz5YYfG+8J19kmFk+tBUljMIOwqo4oI7FNGeQFxLXuE4Pemz/pWxfs0/PN40SHjailc5PxsxNdJIQn9q5mN2eCWUOaAqSYqGDEyM8APibOygcSKlvfFXRshn1a8fh8pLfSj8eF5rNTI=
 script:
 - make install-deps
 - make lint
@@ -20,4 +22,4 @@ deploy:
   script: make docker.push
   on:
     tags: true
-    condition: $TRAVIS_OS_NAME = linux
+    condition: "$TRAVIS_OS_NAME = linux"
