@@ -1,5 +1,7 @@
 # aws-auth-refresher
 
+[![Build Status](https://travis-ci.com/form3tech-oss/aws-auth-refresher.svg?branch=master)](https://travis-ci.com/form3tech-oss/aws-auth-refresher)
+
 Makes it easier to use AWS EKS with temporary AWS IAM users.
 
 ## Motivation
@@ -15,29 +17,34 @@ It periodically matches these regular expressions against existing AWS IAM users
 
 ## Installing
 
-To install `aws-auth-refresher`, start by running
+### Helm (Experimental)
+
+To install `aws-auth-refresher` using Helm, run
+
+```shell
+$ helm repo add aws-auth-refresher https://form3tech-oss.github.io/aws-auth-refresher
+```
+
+```shell
+$ helm repo update
+```
+
+```shell
+$ helm upgrade --install aws-auth-refresher aws-auth-refresher/aws-auth-refresher
+```
+
+Please check [`values.yaml`](https://github.com/form3tech-oss/aws-auth-refresher/blob/master/helm/aws-auth-refresher/values.yaml) for details on how to tweak the installation. 
+
+### `kubectl`
+
+To install `aws-auth-refresher` using `kubectl, run
 
 ```shell
 $ kubectl apply -f deploy/common.yaml
-serviceaccount/aws-auth-refresher created
-role.rbac.authorization.k8s.io/aws-auth-refresher created
-rolebinding.rbac.authorization.k8s.io/aws-auth-refresher created
 ```
 
-Then, run
-
 ```shell
-kubectl apply -f deploy/deployment.yaml
-deployment.apps/aws-auth-refresher created
-```
-
-and make sure that `aws-auth-refresher` is indeed running:
-
-
-```shell
-kubectl -n kube-system get pod -l app=aws-auth-refresher
-NAME                                  READY   STATUS    RESTARTS   AGE
-aws-auth-refresher-566cb9bf88-vdj46   1/1     Running   0          2s
+$ kubectl apply -f deploy/deployment.yaml
 ```
 
 ## Example
