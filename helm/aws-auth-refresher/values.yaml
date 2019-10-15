@@ -1,0 +1,8 @@
+image:
+  repository: form3tech/aws-auth-refresher
+  tag: 1.0.0
+fullnameOverride: ""
+logLevel: info
+nameOverride: ""
+refreshInterval: "10s"
+resources: {}

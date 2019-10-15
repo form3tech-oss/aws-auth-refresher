@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+{{ include "aws-auth-refresher.labels" . | indent 4 }}
+  name: {{ include "aws-auth-refresher.fullname" . }}
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "aws-auth-refresher.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "aws-auth-refresher.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        args:
+        - --log-level
+        - "{{ .Values.logLevel }}"
+        - --refresh-interval
+        - "{{ .Values.refreshInterval }}"
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65534
+          runAsNonRoot: true
+          runAsUser: 65534
+      securityContext:
+        fsGroup: 65534
+      serviceAccountName: {{ include "aws-auth-refresher.fullname" . }}
