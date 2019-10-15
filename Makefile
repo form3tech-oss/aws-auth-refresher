@@ -13,6 +13,7 @@ docker.build:
 
 .PHONY: docker.push
 docker.push: docker.build
+	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
 	docker push $(DOCKER_IMG):$(DOCKER_TAG)
 
 .PHONY: install-golangci-lint
