@@ -4,5 +4,6 @@ image:
 fullnameOverride: ""
 logLevel: info
 nameOverride: ""
+priorityClassName: ""
 refreshInterval: "10s"
 resources: {}
