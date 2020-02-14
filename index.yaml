@@ -3,7 +3,22 @@ entries:
   aws-auth-refresher:
   - apiVersion: v1
     appVersion: 1.0.0
-    created: "2019-10-15T09:26:35.333834+01:00"
+    created: "2020-02-14T13:44:55.823528Z"
+    description: Makes it easier to use AWS EKS with temporary AWS IAM users.
+    digest: 825c494d2019232f0f0ebda54964b5b8664883cef71c5a1145a4bdd910580247
+    home: https://github.com/form3tech-oss/aws-auth-refresher
+    maintainers:
+    - email: brunomcustodio@gmail.com
+      name: bmcstdio
+    name: aws-auth-refresher
+    sources:
+    - https://github.com/form3tech-oss/aws-auth-refresher
+    urls:
+    - https://form3tech-oss.github.io/aws-auth-refresher/aws-auth-refresher-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-02-14T13:44:55.823041Z"
     description: Makes it easier to use AWS EKS with temporary AWS IAM users.
     digest: 055e4256558a9d3b8093b283e4cea5057c4db2d574dced930ae3e59073cfd74b
     home: https://github.com/form3tech-oss/aws-auth-refresher
@@ -16,4 +31,4 @@ entries:
     urls:
     - https://form3tech-oss.github.io/aws-auth-refresher/aws-auth-refresher-1.0.0.tgz
     version: 1.0.0
-generated: "2019-10-15T09:26:35.333374+01:00"
+generated: "2020-02-14T13:44:55.822272Z"
