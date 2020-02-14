@@ -25,7 +25,7 @@ install-deps: install-golangci-lint
 
 .PHONY: lint
 lint:
-	golangci-lint run ./... --enable-all --disable lll,wsl
+	golangci-lint run ./... --enable-all --disable gomnd,lll,wsl
 
 .PHONY: skaffold
 skaffold:
