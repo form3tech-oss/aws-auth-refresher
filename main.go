@@ -16,6 +16,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/signal"
@@ -53,7 +54,7 @@ func buildAwsAuthMapUsersEntry(us []AwsAuthUserSelector, iu []*iam.User) ([]AWSA
 	for _, v := range us {
 		r, err := regexp.Compile(v.ARNRegex)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to compile ARN regex: %w", err)
 		}
 		for _, u := range iu {
 			if u.Arn != nil && r.MatchString(*u.Arn) {
@@ -65,16 +66,23 @@ func buildAwsAuthMapUsersEntry(us []AwsAuthUserSelector, iu []*iam.User) ([]AWSA
 			}
 		}
 	}
+
 	return res, nil
 }
 
 // createKubeClient creates a Kubernetes client based on the specified kubeconfig file.
 func createKubeClient(pathToKubeconfig string) (kubernetes.Interface, error) {
-	c, err := clientcmd.BuildConfigFromFlags("", pathToKubeconfig)
+	cfg, err := clientcmd.BuildConfigFromFlags("", pathToKubeconfig)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to build config: %w", err)
 	}
-	return kubernetes.NewForConfig(c)
+
+	c, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create client: %w", err)
+	}
+
+	return c, nil
 }
 
 // listAWSIAMUsers returns a list of all AWS IAM users that currently exist.
@@ -88,7 +96,7 @@ func listAWSIAMUsers(iamClient iamiface.IAMAPI) ([]*iam.User, error) {
 			Marker: marker,
 		})
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to list users: %w", err)
 		}
 		users = append(users, o.Users...)
 		if o.IsTruncated != nil && !*o.IsTruncated {
@@ -97,6 +105,7 @@ func listAWSIAMUsers(iamClient iamiface.IAMAPI) ([]*iam.User, error) {
 			marker = o.Marker
 		}
 	}
+
 	return users, nil
 }
 
@@ -106,48 +115,56 @@ func refreshAwsAuthConfigMap(kubeClient kubernetes.Interface, iamClient iamiface
 	s, err := kubeClient.CoreV1().ConfigMaps(metav1.NamespaceSystem).Get("aws-auth-refresher", metav1.GetOptions{})
 	if err != nil {
 		log.Error(err)
+
 		return
 	}
 	// Read the value of the 'mapUsers' entry.
 	d, exists := s.Data["mapUsers"]
 	if !exists {
 		log.Debugf("No rules found")
+
 		return
 	}
 	// Decode the value of the 'mapUsers' entry.
 	var us []AwsAuthUserSelector
 	if err := yaml.NewDecoder(strings.NewReader(d)).Decode(&us); err != nil {
 		log.Error(err)
+
 		return
 	}
 	// Grab an up-to-date list of AWS IAM users.
 	u, err := listAWSIAMUsers(iamClient)
 	if err != nil {
 		log.Error(err)
+
 		return
 	}
 	// Build the final value of the 'mapUsers' entry of the 'kube-system/aws-auth-refresher' ConfigMap.
 	l, err := buildAwsAuthMapUsersEntry(us, u)
 	if err != nil {
 		log.Error(err)
+
 		return
 	}
 	// Read the 'kube-system/aws-auth' ConfigMap.
 	t, err := kubeClient.CoreV1().ConfigMaps(metav1.NamespaceSystem).Get("aws-auth", metav1.GetOptions{})
 	if err != nil {
 		log.Error(err)
+
 		return
 	}
 	// Encode the value of the 'mapUsers' entry.
 	var b strings.Builder
 	if err := yaml.NewEncoder(&b).Encode(l); err != nil {
 		log.Error(err)
+
 		return
 	}
 	// Update the 'mapUsers' entry of the 'kube-system/aws-auth' ConfigMap.
 	t.Data["mapUsers"] = b.String()
 	if _, err := kubeClient.CoreV1().ConfigMaps(metav1.NamespaceSystem).Update(t); err != nil {
 		log.Error(err)
+
 		return
 	}
 }
